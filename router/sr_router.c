@@ -89,7 +89,7 @@ void sr_handlepacket(struct sr_instance* sr,
 
   /* Ethernet */
   int minlength = sizeof(sr_ethernet_hdr_t);
-  if (length < minlength) {
+  if (len < minlength) {
     printf("Failed ETHERNET header, insufficient length\n");
     return;
   }
@@ -102,9 +102,12 @@ void sr_handlepacket(struct sr_instance* sr,
     if (sr_if_list_contains_ip(sr, ip_hdr->ip_dst)) { /* If the packet is for the router */
       printf ("The IP packet is for me!\n");
 
+      /* Check the ip_protocol */
+      uint8_t ip_proto = ip_protocol((uint8_t *)ip_hdr);
+
       if (ip_proto == ip_protocol_icmp) { /* ICMP */
       minlength += sizeof(sr_icmp_hdr_t);
-      if (length < minlength)
+      if (len < minlength)
         fprintf(stderr, "Failed to print ICMP header, insufficient length\n");
         return;
       }
@@ -124,13 +127,10 @@ void sr_handlepacket(struct sr_instance* sr,
 
       /* Check if the IP header has not been truncated  */
       minlength += sizeof(sr_ip_hdr_t);
-      if (length < minlength) {
+      if (len < minlength) {
         fprintf(stderr, "Failed IP header, insufficient length\n");
         return;
       }
-
-      /* Check the ip_protocol */
-      uint8_t ip_proto = ip_protocol(ip_hdr);
 
 
 
@@ -158,7 +158,7 @@ void sr_handlepacket(struct sr_instance* sr,
     /* If it's a request to me: Construct an ARP reply and send it back */
       /* fill in code here */
   } else {
-    fprintf(stderr, "Unrecognized Ethernet Type: %d\n", ethtype);
+    fprintf(stderr, "Unrecognized Ethernet Type: %d\n", ethertype);
   }
 
   printf("~*~*~*~ Finished printing packet processing. ~*~*~*~\n\n");
