@@ -133,12 +133,6 @@ void sr_handlepacket(struct sr_instance* sr,
       }
 
 
-
-
-
-
-
-
       /* Perform checksums */
       /* If the packet is not for the router, check routing table, perform LPM */
 
@@ -147,7 +141,7 @@ void sr_handlepacket(struct sr_instance* sr,
     printf ("This is an ARP Packet!\n");
 
     minlength += sizeof(sr_arp_hdr_t);
-    if (length < minlength)
+    if (len < minlength)
       fprintf(stderr, "Failed to print ARP header, insufficient length\n");
       return;
 
