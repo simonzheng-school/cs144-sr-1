@@ -94,7 +94,8 @@ void sr_handlepacket(struct sr_instance* sr,
     return;
   }
 
-	if (ethertype(packet) == ethertype_ip) { /* If this is an IP packet */
+  uint16_t ethtype = ethertype(packet);
+	if (ethtype == ethertype_ip) { /* If this is an IP packet */
 
     printf ("This is an IP Packet!\n");
     sr_ip_hdr_t *ip_hdr = (sr_ip_hdr_t *) (packet + sizeof(sr_ethernet_hdr_t));
@@ -137,7 +138,7 @@ void sr_handlepacket(struct sr_instance* sr,
       /* If the packet is not for the router, check routing table, perform LPM */
 
 		}
-	} else if (ethertype(packet) == ethertype_arp) { /* If this is an ARP packet */
+	} else if (ethtype == ethertype_arp) { /* If this is an ARP packet */
     printf ("This is an ARP Packet!\n");
 
     minlength += sizeof(sr_arp_hdr_t);
@@ -152,7 +153,7 @@ void sr_handlepacket(struct sr_instance* sr,
     /* If it's a request to me: Construct an ARP reply and send it back */
       /* fill in code here */
   } else {
-    fprintf(stderr, "Unrecognized Ethernet Type: %d\n", ethertype);
+    fprintf(stderr, "Unrecognized Ethernet Type: %d\n", ethtype);
   }
 
   printf("~*~*~*~ Finished printing packet processing. ~*~*~*~\n\n");
