@@ -192,7 +192,7 @@ void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
   rt_walker = sr->routing_table;
 
 
-  printf("LPM: The first routing entry is: \n\t");
+  printf("LPM: The first routing entry is as follows and has mask == %d: \n\t", rt_walkter->mask);
   sr_print_routing_entry(rt_walker);
 
   /* variables to hold the current rtable entry */
@@ -209,7 +209,7 @@ void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
   {
       rt_walker = rt_walker->next; 
       /* do something */
-      printf("LPM: The next routing entry is: \n\t");
+      printf("LPM: The next routing entry is as follows and has mask == %d: \n\t", rt_walkter->mask);
       sr_print_routing_entry(rt_walker);
       /* e.g.: uint32_t gateway_addr = calculate_prefix_match(rt_walker, max_match); */
   }
