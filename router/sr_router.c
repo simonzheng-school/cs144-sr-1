@@ -177,7 +177,7 @@ int ip_hdr_checksum_valid (sr_ip_hdr_t *ip_hdr) {
 
 void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
 {
-  printf("~*~*~*~ Starting Routing Table LPM Forwarding with the following rtable on IP == : ~*~*~*~\n\n", ip_addr);
+  printf("~*~*~*~ Starting Routing Table LPM Forwarding with the following rtable on IP == : ~*~*~*~\n\n");
   print_addr_ip_int(ntohl(ip_addr));
   sr_print_routing_table(sr);
   printf("~*~*~*~\n\n");
