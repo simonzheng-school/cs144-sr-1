@@ -103,7 +103,6 @@ void sr_handlepacket(struct sr_instance* sr,
 		}
 	}
 
-=======
   printf("~*~*~*~\n\n");
 
   sr_ip_hdr_t *iphdr = (sr_ip_hdr_t *) (packet);
