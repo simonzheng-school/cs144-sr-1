@@ -137,9 +137,19 @@ void sr_handlepacket(struct sr_instance* sr,
       }
 
       /* If the packet is not for the router, check routing table, perform LPM */
-      sr_routing_table_lpm_forwarding(sr, ip_hdr->ip_dst);
+      uint32_t next_ip = sr_routing_table_lpm_forwarding(sr, ip_hdr->ip_dst);
 
-
+      /* If no match, send ICMP net unreachable */
+      /* Else check ARP Cache */
+      struct sr_arpentry *arp_entry = sr_arpcache_lookup(sr->cache, next_ip);
+      if (arp_entry == NULL) { /* We have an ARP Cache Miss! */
+        /* Send ARP Request */
+        /* Resent > 5 times */
+        /* ICMP host unreachable */
+      } else { /* We have an ARP Cache Hit! */
+        /* Send frame to next hope */
+      }
+      free(arp_entry);
 		}
 	} else if (ethtype == ethertype_arp) { /* If this is an ARP packet */
     printf ("This is an ARP Packet!\n");
@@ -217,7 +227,7 @@ uint32_t sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_add
       printf("\twe have a match with \n\t\t");
       sr_print_routing_entry(rt_walker);
       if (rt_walker->mask.s_addr > longest_mask) {
-        printf("\t *** we have a new longest match! *** \n");
+        printf("\t\t *** we have a new longest match! *** \n");
         next_gw = rt_walker->gw;
         longest_mask = rt_walker->mask.s_addr;
       }
