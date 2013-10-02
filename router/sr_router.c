@@ -77,11 +77,11 @@ void sr_handlepacket(struct sr_instance* sr,
   assert(interface);
   printf("*** -> Received packet of length %d \n",len);
 
+  printf("~*~*~*~ Printing Packet Headers. ~*~*~*~\n\n");
   /* printing the ethernet header fields to test */
   print_hdrs(packet, len);
-	printf("~*~*~*~\n\n");
+	printf("~*~*~*~ Header finished, Starting printing packet processing. ~*~*~*~\n\n");
 	
-  sr_ip_hdr_t *iphdr = (sr_ip_hdr_t *) (packet);
 
 	if (ethertype(packet) == ethertype_arp) /* If this is an ARP packet */
     /* If it's a reply to me: Cache it, go through my request queue and send outstanding packets */
@@ -92,6 +92,7 @@ void sr_handlepacket(struct sr_instance* sr,
 
 	if (ethertype(packet) == ethertype_ip) { /* If this is an IP packet */
 
+  sr_ip_hdr_t *iphdr = (sr_ip_hdr_t *) (packet + sizeof(sr_ethernet_hdr_t));
 		if (sr_if_list_contains_ip(sr, iphdr->ip_dst)) { /* If the packet is for the router */
       printf ("The IP packet is for me!\n");
       sr_icmp_hdr_t *icmp_hdr = (sr_icmp_hdr_t *)(packet + sizeof(sr_ethernet_hdr_t) + sizeof(sr_ip_hdr_t)); 
@@ -101,12 +102,14 @@ void sr_handlepacket(struct sr_instance* sr,
       } 
       /* Else if it's TCP/UDP, send ICMP port unreachable */
         /* fill in code here */
+
 		} else { /* If the packet is not for the router */
 			printf ("The IP packet is not for me!\n");
-      /* If this is an IP packet */
+      /* If the packet is not for the router, check routing table, perform LPM */
+
 		}
 	}
 
-  printf("~*~*~*~\n\n");
+  printf("~*~*~*~ Finished printing packet processing. ~*~*~*~\n\n");
 
 }/* end sr_ForwardPacket */
