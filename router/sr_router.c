@@ -134,7 +134,10 @@ void sr_handlepacket(struct sr_instance* sr,
       }
 
       /* Perform checksums */
-      if (!ip_hdr_checksum_valid(ip_hdr));
+      if (!ip_hdr_checksum_valid(ip_hdr)) {
+        fprintf(stderr, "Checksum is not valid -- Packet is probably corrupt\n");
+        return;
+      }
 
 
       /* If the packet is not for the router, check routing table, perform LPM */
