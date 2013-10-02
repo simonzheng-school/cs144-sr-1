@@ -133,8 +133,10 @@ void sr_handlepacket(struct sr_instance* sr,
         return;
       }
 
-
       /* Perform checksums */
+      if (!ip_hdr_checksum_valid(ip_hdr));
+
+
       /* If the packet is not for the router, check routing table, perform LPM */
 
 		}
@@ -145,8 +147,6 @@ void sr_handlepacket(struct sr_instance* sr,
     if (len < minlength)
       fprintf(stderr, "Failed to print ARP header, insufficient length\n");
       return;
-
-
     /* If it's a reply to me: Cache it, go through my request queue and send outstanding packets */
       /* fill in code here */
 
@@ -159,3 +159,17 @@ void sr_handlepacket(struct sr_instance* sr,
   printf("~*~*~*~ Finished printing packet processing. ~*~*~*~\n\n");
 
 }/* end sr_ForwardPacket */
+
+int ip_hdr_checksum_valid (sr_ip_hdr_t *ip_hdr) {
+  printf("Checking if checksum is valid...\n\n");
+  uint16_t initial_checksum = ip_hdr->ip_sum;
+  ip_hdr->ip_sum = 0;
+  if (cksum(ip_hdr, sizeof(sr_ip_hdr_t)) == initial_checksum) {
+    printf("Checksum is valid!\n\n");
+    return 1;
+  }
+  printf("Checksum is NOT valid...\n\n");
+  return 0;
+}
+/* Check if your minlength calculations are working out, especially around ARP but it should be since it won't add anything else if it's ARP */
+/* Check if you need to see if the datagram has been truncated to < than length specified in IP hdr */
