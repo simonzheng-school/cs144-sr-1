@@ -177,7 +177,7 @@ int ip_hdr_checksum_valid (sr_ip_hdr_t *ip_hdr) {
 
 void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
 {
-  printf("~*~*~*~ Starting Routing Table LPM Forwarding with the following rtable on IP == %d: ~*~*~*~\n\n", ip_addr);
+  printf("~*~*~*~ Starting Routing Table LPM Forwarding with the following rtable on IP == %x: ~*~*~*~\n\n", ip_addr);
   sr_print_routing_table(sr);
   printf("~*~*~*~\n\n");
   struct sr_rt* rt_walker = 0;
@@ -195,7 +195,7 @@ void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
   printf("LPM: The first routing entry is as follows and has mask == %x: \n\t", rt_walker->mask.s_addr);
   sr_print_routing_entry(rt_walker);
   printf("\tAfter applying the subnet mask we have ip&mask == %x\n", rt_walker->mask.s_addr & ip_addr);
-
+  uint32_t masked_ip = rt_walker->mask.s_addr & ip_addr;
   /* variables to hold the current rtable entry */
   /* 
   int max_match = 0;
@@ -213,6 +213,11 @@ void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
       printf("LPM: The next routing entry is as follows and has mask == %x: \n\t", rt_walker->mask.s_addr);
       sr_print_routing_entry(rt_walker);
       printf("\tAfter applying the subnet mask we have ip&mask == %x\n", rt_walker->mask.s_addr & ip_addr);
+      masked_ip = rt_walker->mask.s_addr & ip_addr;
+      if (masked_ip == rt_walker.dest) {
+        printf("\twe have a match with \n");
+        sr_print_routing_entry(rt_walker);
+      }
       /* e.g.: uint32_t gateway_addr = calculate_prefix_match(rt_walker, max_match); */
   }
   printf("~*~*~*~ Finished with Routing Table LPM Forwarding ~*~*~*~\n\n");
