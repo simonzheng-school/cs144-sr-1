@@ -105,7 +105,6 @@ void sr_handlepacket(struct sr_instance* sr,
 
   printf("~*~*~*~\n\n");
 
-  sr_ip_hdr_t *iphdr = (sr_ip_hdr_t *) (packet);
   /* if arp packet, cache or construct reply -- not needed now*/
   if (ethertype(packet) == ethertype_arp)
     printf("This is an arp packet!\n\n");
