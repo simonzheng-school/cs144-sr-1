@@ -78,6 +78,8 @@ void sr_handlepacket(struct sr_instance* sr,
 
   printf("*** -> Received packet of length %d \n",len);
 
+  /* checking if this works */
+
   /* fill in code here */
 
 }/* end sr_ForwardPacket */
