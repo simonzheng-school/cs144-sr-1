@@ -191,7 +191,7 @@ void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
   /* Traverse the routing table searching for the gateway address with the greatest match */
   rt_walker = sr->routing_table;
 
-  uint32_t next_gw = rt_walker->gw.s_addr;
+  struct in_addr next_gw = rt_walker->gw;
   uint32_t longest_mask = rt_walker->mask.s_addr;
 
   printf("LPM: The first routing entry is as follows and has mask == %x: \n\t", rt_walker->mask.s_addr);
@@ -226,15 +226,15 @@ void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
       if (masked_ip == rt_walker->dest.s_addr) {
         printf("\twe have a match with \n");
         sr_print_routing_entry(rt_walker);
-        if (rt_walker->gw.s_addr > longest_mask) {
+        if (rt_walker->mask.s_addr > longest_mask) {
           printf("\t *** we have a new longest match! *** \n");
-          next_gw = rt_walker->gw.s_addr;
-          longest_mask = rt_walker->gw.s_addr;
+          next_gw = rt_walker->gw;
+          longest_mask = rt_walker->mask.s_addr;
         }
       }
       /* e.g.: uint32_t gateway_addr = calculate_prefix_match(rt_walker, max_match); */
   }
-  printf("The Next gateway_addr is %x\n", next_gw);
+  printf("The Next gateway_addr is %s\n", inet_ntoa(entry->gw));
   printf("~*~*~*~ Finished with Routing Table LPM Forwarding ~*~*~*~\n\n");
 }
  
