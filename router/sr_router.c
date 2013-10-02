@@ -196,6 +196,11 @@ void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
   sr_print_routing_entry(rt_walker);
   printf("\tAfter applying the subnet mask we have ip&mask == %x\n", rt_walker->mask.s_addr & ip_addr);
   uint32_t masked_ip = rt_walker->mask.s_addr & ip_addr;
+  if (masked_ip == rt_walker.dest) {
+    printf("\twe have a match with \n");
+    sr_print_routing_entry(rt_walker);
+  }
+
   /* variables to hold the current rtable entry */
   /* 
   int max_match = 0;
