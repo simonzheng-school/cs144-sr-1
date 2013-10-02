@@ -96,8 +96,6 @@ void sr_handlepacket(struct sr_instance* sr,
 		} else {
 			printf ("It's not for me!\n");
 		}
-
-		sr->if_list = sr->if_list->next;
 	}
 
   printf("~*~*~*~\n\n");
