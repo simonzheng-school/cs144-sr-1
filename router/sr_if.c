@@ -183,8 +183,7 @@ int sr_if_list_contains_ip(struct sr_instance* sr, uint32_t ip_addr)
 
     if(sr->if_list == 0)
     {
-        printf(" Interface list empty \n");
-        return;
+        return 0;
     }
 
     if_walker = sr->if_list;
