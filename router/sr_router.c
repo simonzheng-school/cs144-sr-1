@@ -136,8 +136,9 @@ void sr_handlepacket(struct sr_instance* sr,
         return;
       }
 
-
       /* If the packet is not for the router, check routing table, perform LPM */
+      sr_routing_table_lpm_forwarding(sr, ip_hdr->ip_dst);
+
 
 		}
 	} else if (ethtype == ethertype_arp) { /* If this is an ARP packet */
