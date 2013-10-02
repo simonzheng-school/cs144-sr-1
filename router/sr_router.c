@@ -97,7 +97,7 @@ void sr_handlepacket(struct sr_instance* sr,
 				/* it's for me! */
 				printf ("it's for me!\n");
 			} else {
-				printf ("It's not for me!");
+				printf ("It's not for me!\n");
 			}
 			sr->if_list = sr->if_list->next;
 		}
@@ -113,7 +113,8 @@ void sr_handlepacket(struct sr_instance* sr,
     
     printf("the if list is...\n");
     sr_print_if_list(sr);
-    
+
+
     while (sr->if_list != NULL) {
       if (sr->if_list->ip == iphdr->ip_dst) {
         /* it's for me! */
@@ -124,7 +125,5 @@ void sr_handlepacket(struct sr_instance* sr,
       sr->if_list = sr->if_list->next;
     }
   }
-
-  /* Simon is asking if my changes are going through */
 
 }/* end sr_ForwardPacket */

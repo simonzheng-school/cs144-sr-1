@@ -170,6 +170,38 @@ void sr_print_if_list(struct sr_instance* sr)
 } /* -- sr_print_if_list -- */
 
 /*--------------------------------------------------------------------- 
+ * Method: sr_list_contains(..)
+ * Scope: Global
+ *
+ * print out the list of interfaces to stdout
+ *
+ *---------------------------------------------------------------------*/
+
+int sr_if_list_contains_ip(struct sr_instance* sr, uint32_t ip_addr)
+{
+    struct sr_if* if_walker = 0;
+
+    if(sr->if_list == 0)
+    {
+        printf(" Interface list empty \n");
+        return;
+    }
+
+    if_walker = sr->if_list;
+    
+    if (if_walker->ip == ip_addr) return 1;
+    while(if_walker->next)
+    {
+        if_walker = if_walker->next; 
+        if (if_walker->ip == ip_addr) return 1;
+    }
+
+    return 0;
+
+} /* -- sr_print_if_list -- */
+
+
+/*--------------------------------------------------------------------- 
  * Method: sr_print_if(..)
  * Scope: Global
  *
