@@ -113,8 +113,9 @@ void sr_handlepacket(struct sr_instance* sr,
     printf("This is an ip packet!\n\n");
     
     printf("the if list is...\n");
+    sr_print_if_list(sr);
+    
     while (sr->if_list != NULL) {
-      sr_print_if_list(sr);
       if (sr->if_list->ip == iphdr->ip_dst) {
         /* it's for me! */
         printf ("it's for the router's interface!\n");
@@ -125,6 +126,6 @@ void sr_handlepacket(struct sr_instance* sr,
     }
   }
 
-  /* Testing!! */
+  /* Simon is asking if my changes are going through */
 
 }/* end sr_ForwardPacket */
