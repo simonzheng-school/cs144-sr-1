@@ -75,5 +75,6 @@ void sr_set_ether_addr(struct sr_instance* , const unsigned char* );
 void sr_print_if_list(struct sr_instance* );
 int ip_hdr_checksum_valid (sr_ip_hdr_t *ip_hdr);
 void sr_routing_table_lpm_forward(struct sr_instance* sr, uint32_t ip_addr);
+void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr);
 
 #endif /* SR_ROUTER_H */
