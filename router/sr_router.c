@@ -80,5 +80,33 @@ void sr_handlepacket(struct sr_instance* sr,
 
   /* fill in code here */
 
-}/* end sr_ForwardPacket */
+  /* printing the ethernet header fields to test */
+  print_hdrs(packet, len);
+	printf("~*~*~*~\n\n");
+	
+  sr_ip_hdr_t *iphdr = (sr_ip_hdr_t *) (packet);
+  /* if arp packet, cache or construct reply -- not needed now*/
+	if (ethertype(packet) == ethertype_arp)
+		printf("This is an arp packet!\n\n");
+	if (ethertype(packet) == ethertype_ip) {
+		printf("This is an ip packet!\n\n");
+		while (sr->if_list != NULL) {
+			printf("the if list is...\n");
+			sr_print_if_list(sr);
+			if (sr->if_list->ip == iphdr->ip_dst) {
+				/* it's for me! */
+				printf ("it's for me!\n");
+			} else {
+				printf ("It's not for me!");
+			}
+			sr->if_list = sr->if_list->next;
+		}
+	}
 
+  /* if IP packet */
+    /* if for me */
+      /* if its ICMP echo req, send echo reply */
+      /* else if it's TCP/UDP, send ICMP port unreachable */
+    /* else, do lotsa crazy stuff */
+    
+}/* end sr_ForwardPacket */
