@@ -145,9 +145,10 @@ void sr_handlepacket(struct sr_instance* sr,
     printf ("This is an ARP Packet!\n");
 
     minlength += sizeof(sr_arp_hdr_t);
-    if (len < minlength)
+    if (len < minlength) {
       fprintf(stderr, "Failed to print ARP header, insufficient length\n");
       return;
+    }
     /* If it's a reply to me: Cache it, go through my request queue and send outstanding packets */
       /* fill in code here */
 
@@ -183,22 +184,24 @@ void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
 
   if(sr->routing_table == 0)
   {
-      printf(" *warning* Routing table empty \n");
-      return;
+    printf(" *warning* Routing table empty \n");
+    return;
   }
 
   /* Traverse the routing table searching for the gateway address with the greatest match */
   rt_walker = sr->routing_table;
-  
-  int max_match = 0;
+
 
   printf("LPM: The first routing entry is: \n\t");
   sr_print_routing_entry(rt_walker);
 
   /* variables to hold the current rtable entry */
+  /* 
+  int max_match = 0;
   struct in_addr dest = rt_walker->dest;
   struct in_addr gw = rt_walker->gw;
   struct in_addr mask = rt_walker->mask;
+  */
 
 
   /* e.g.: uint32_t gateway_addr = calculate_prefix_match(rt_walker, max_match); */
