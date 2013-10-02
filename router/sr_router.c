@@ -139,8 +139,12 @@ void sr_handlepacket(struct sr_instance* sr,
       /* If the packet is not for the router, check routing table, perform LPM */
       uint32_t next_ip = sr_routing_table_lpm_forwarding(sr, ip_hdr->ip_dst);
 
-      /* If no match, send ICMP net unreachable */
-      /* Else check ARP Cache */
+      if (next_ip == -1) {
+        /* If no match, send ICMP net unreachable */
+      } else {
+        /* Else check ARP Cache */
+      }
+      
       struct sr_arpentry *arp_entry = sr_arpcache_lookup(&sr->cache, next_ip);
       if (arp_entry == NULL) { /* We have an ARP Cache Miss! */
         /* Send ARP Request */
@@ -185,7 +189,7 @@ int ip_hdr_checksum_valid (sr_ip_hdr_t *ip_hdr) {
 }
 
 
-uint32_t sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
+struct in_addr sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
 {
   printf("~*~*~*~ Starting Routing Table LPM Forwarding with the following rtable on IP == ");
   print_addr_ip_int(ntohl(ip_addr));
@@ -197,7 +201,7 @@ uint32_t sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_add
   if(sr->routing_table == 0)
   {
     printf(" *warning* Routing table empty \n");
-    return;
+    return nll;
   }
 
   /* Traverse the routing table searching for the gateway address with the greatest match */
@@ -235,7 +239,7 @@ uint32_t sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_add
   }
   printf("The Next gateway_addr is %s\n", inet_ntoa(next_gw));
   printf("~*~*~*~ Finished with Routing Table LPM Forwarding ~*~*~*~\n\n");
-  return next_gw.s_addr;
+  return next_gw;
 }
  
 /* Check TTL, ARP, etc and the stub functions kurt talked about and add these in your function. */
