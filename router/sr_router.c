@@ -176,7 +176,7 @@ int ip_hdr_checksum_valid (sr_ip_hdr_t *ip_hdr) {
 void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
 {
   printf("~*~*~*~ Starting Routing Table LPM Forwarding with the following rtable: ~*~*~*~\n\n");
-  printf(sr->routing_table);
+  sr_print_routing_table(sr);
   printf("~*~*~*~\n\n");
   struct sr_rt* rt_walker = 0;
 
@@ -195,9 +195,9 @@ void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
   sr_print_routing_entry(rt_walker);
 
   /* variables to hold the current rtable entry */
-  struct in_addr dest = rt_walker.dest;
-  struct in_addr gw = rt_walker.gw;
-  struct in_addr mask = rt_walker.mask;
+  struct in_addr dest = rt_walker->dest;
+  struct in_addr gw = rt_walker->gw;
+  struct in_addr mask = rt_walker->mask;
 
 
   /* e.g.: uint32_t gateway_addr = calculate_prefix_match(rt_walker, max_match); */
