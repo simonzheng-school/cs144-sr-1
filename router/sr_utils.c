@@ -182,5 +182,4 @@ void print_hdrs(uint8_t *buf, uint32_t length) {
     fprintf(stderr, "Unrecognized Ethernet Type: %d\n", ethtype);
   }
 }
-/* Check if your minlength calculations are working out, especially around ARP */
 

@@ -79,9 +79,6 @@ void sr_handlepacket(struct sr_instance* sr,
 
 
 
-
-
-
   printf("~*~*~*~ Printing Packet Headers. ~*~*~*~\n\n");
   print_hdrs(packet, len);
 	printf("~*~*~*~ Header finished, Starting printing packet processing. ~*~*~*~\n\n");
@@ -174,5 +171,30 @@ int ip_hdr_checksum_valid (sr_ip_hdr_t *ip_hdr) {
   printf("Checksum is NOT valid...\n\n");
   return 0;
 }
+
+
+void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
+{
+  printf("Performing Routing Table LPM Forwarding...\n\n");
+  struct sr_rt* rt_walker = 0;
+
+  if(sr->routing_table == 0)
+  {
+      printf(" *warning* Routing table empty \n");
+      return;
+  }
+
+  rt_walker = sr->routing_table;
+  
+  int max_match = 0;
+  uint32_t gateway_addr = calculate_prefix_match(rt_walker, max_match);
+  while(rt_walker->next)
+  {
+      rt_walker = rt_walker->next; 
+      uint32_t gateway_addr = calculate_prefix_match(rt_walker, max_match);
+  }
+
+} /* -- sr_print_routing_table -- */
+
 /* Check if your minlength calculations are working out, especially around ARP but it should be since it won't add anything else if it's ARP */
 /* Check if you need to see if the datagram has been truncated to < than length specified in IP hdr */
