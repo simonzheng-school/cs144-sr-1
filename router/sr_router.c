@@ -175,7 +175,7 @@ int ip_hdr_checksum_valid (sr_ip_hdr_t *ip_hdr) {
 }
 
 
-void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
+uint32_t sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
 {
   printf("~*~*~*~ Starting Routing Table LPM Forwarding with the following rtable on IP == ");
   print_addr_ip_int(ntohl(ip_addr));
@@ -201,43 +201,31 @@ void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
   printf("\tAfter applying the subnet mask we have ip&mask == %x\n", rt_walker->mask.s_addr & ip_addr);
   uint32_t masked_ip = rt_walker->mask.s_addr & ip_addr;
   if (masked_ip == rt_walker->dest.s_addr) {
-    printf("\twe have a match with \n");
+    printf("\twe have an initial match with \n\t\t");
     sr_print_routing_entry(rt_walker);
   }
 
-  /* variables to hold the current rtable entry */
-  /* 
-  int max_match = 0;
-  struct in_addr dest = rt_walker->dest;
-  struct in_addr gw = rt_walker->gw;
-  struct in_addr mask = rt_walker->mask;
-  */
-
-  
-
-
-  /* e.g.: uint32_t gateway_addr = calculate_prefix_match(rt_walker, max_match); */
   while(rt_walker->next)
   {
-      rt_walker = rt_walker->next; 
-      /* do something */
-      printf("LPM: The next routing entry is as follows and has mask == %x: \n\t", rt_walker->mask.s_addr);
+    rt_walker = rt_walker->next; 
+    /* do something */
+    printf("LPM: The next routing entry is as follows and has mask == %x: \n\t", rt_walker->mask.s_addr);
+    sr_print_routing_entry(rt_walker);
+    printf("\tAfter applying the subnet mask we have ip&mask == %x\n", rt_walker->mask.s_addr & ip_addr);
+    masked_ip = rt_walker->mask.s_addr & ip_addr;
+    if (masked_ip == rt_walker->dest.s_addr) {
+      printf("\twe have a match with \n\t\t");
       sr_print_routing_entry(rt_walker);
-      printf("\tAfter applying the subnet mask we have ip&mask == %x\n", rt_walker->mask.s_addr & ip_addr);
-      masked_ip = rt_walker->mask.s_addr & ip_addr;
-      if (masked_ip == rt_walker->dest.s_addr) {
-        printf("\twe have a match with \n");
-        sr_print_routing_entry(rt_walker);
-        if (rt_walker->mask.s_addr > longest_mask) {
-          printf("\t *** we have a new longest match! *** \n");
-          next_gw = rt_walker->gw;
-          longest_mask = rt_walker->mask.s_addr;
-        }
+      if (rt_walker->mask.s_addr > longest_mask) {
+        printf("\t *** we have a new longest match! *** \n");
+        next_gw = rt_walker->gw;
+        longest_mask = rt_walker->mask.s_addr;
       }
-      /* e.g.: uint32_t gateway_addr = calculate_prefix_match(rt_walker, max_match); */
+    }
   }
-  printf("The Next gateway_addr is %s\n", inet_ntoa(next_gw));
+  printf("The Next gateway_addr is %s\n", inet_ntoa(next_gw.));
   printf("~*~*~*~ Finished with Routing Table LPM Forwarding ~*~*~*~\n\n");
+  return next_gw.s_addr;
 }
  
 /* Check TTL, ARP, etc and the stub functions kurt talked about and add these in your function. */
