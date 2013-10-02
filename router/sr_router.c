@@ -75,26 +75,36 @@ void sr_handlepacket(struct sr_instance* sr,
   assert(sr);
   assert(packet);
   assert(interface);
-
   printf("*** -> Received packet of length %d \n",len);
-
-  /* fill in code here */
 
   /* printing the ethernet header fields to test */
   print_hdrs(packet, len);
 	printf("~*~*~*~\n\n");
 	
   sr_ip_hdr_t *iphdr = (sr_ip_hdr_t *) (packet);
-  /* if arp packet, cache or construct reply -- not needed now*/
-	if (ethertype(packet) == ethertype_arp)
-		printf("This is an arp packet!\n\n");
-	if (ethertype(packet) == ethertype_ip) {
-		printf("This is an ip packet!\n\n");
-		if (sr_if_list_contains_ip(sr, iphdr->ip_dst)) {
-			/* it's for me! */
-			printf ("it's for me!\n");
-		} else {
-			printf ("It's not for me!\n");
+
+	if (ethertype(packet) == ethertype_arp) /* If this is an ARP packet */
+    /* If it's a reply to me: Cache it, go through my request queue and send outstanding packets */
+      /* fill in code here */
+
+    /* If it's a request to me: Construct an ARP reply and send it back */
+      /* fill in code here */
+
+	if (ethertype(packet) == ethertype_ip) { /* If this is an IP packet */
+
+		if (sr_if_list_contains_ip(sr, iphdr->ip_dst)) { /* If the packet is for the router */
+      printf ("The IP packet is for me!\n");
+      /* If it's ICMP echo req, send echo reply. */
+      sr_icmp_hdr_t *icmp_hdr = (sr_icmp_hdr_t *)(packet + sizeof(sr_ethernet_hdr_t) + sizeof(sr_ip_hdr_t));
+      /* if (icmp_hdr->type == 8 && icmp_hdr->type == 0) */ /* If this is an echo request */
+        /* Send echo reply */
+        /* fill in code here */
+
+      /* Else if it's TCP/UDP, send ICMP port unreachable */
+        /* fill in code here */
+		} else { /* If the packet is not for the router */
+			printf ("The IP packet is not for me!\n");
+      /* If this is an IP packet */
 		}
 	}
 
