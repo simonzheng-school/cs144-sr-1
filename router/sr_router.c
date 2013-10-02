@@ -141,7 +141,7 @@ void sr_handlepacket(struct sr_instance* sr,
 
       /* If no match, send ICMP net unreachable */
       /* Else check ARP Cache */
-      struct sr_arpentry *arp_entry = sr_arpcache_lookup(sr->cache, next_ip);
+      struct sr_arpentry *arp_entry = sr_arpcache_lookup(&sr->cache, next_ip);
       if (arp_entry == NULL) { /* We have an ARP Cache Miss! */
         /* Send ARP Request */
         /* Resent > 5 times */
