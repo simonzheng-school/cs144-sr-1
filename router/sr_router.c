@@ -90,37 +90,16 @@ void sr_handlepacket(struct sr_instance* sr,
 		printf("This is an arp packet!\n\n");
 	if (ethertype(packet) == ethertype_ip) {
 		printf("This is an ip packet!\n\n");
-		if (sr_if_list_contains_ip(sr, iphdr->ip)) {
+		if (sr_if_list_contains_ip(sr, iphdr->ip_dst)) {
 			/* it's for me! */
 			printf ("it's for me!\n");
 		} else {
 			printf ("It's not for me!\n");
 		}
-    
+
 		sr->if_list = sr->if_list->next;
 	}
 
   printf("~*~*~*~\n\n");
-
-  /* if arp packet, cache or construct reply -- not needed now*/
-  if (ethertype(packet) == ethertype_arp)
-    printf("This is an arp packet!\n\n");
-  if (ethertype(packet) == ethertype_ip) {
-    printf("This is an ip packet!\n\n");
-    
-    printf("the if list is...\n");
-    sr_print_if_list(sr);
-
-
-    while (sr->if_list != NULL) {
-      if (sr->if_list->ip == iphdr->ip_dst) {
-        /* it's for me! */
-        printf ("it's for the router's interface!\n");
-      } else {
-        printf ("It's not for router's interface! \n");
-      }
-      sr->if_list = sr->if_list->next;
-    }
-  }
 
 }/* end sr_ForwardPacket */
