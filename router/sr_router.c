@@ -234,7 +234,7 @@ void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
       }
       /* e.g.: uint32_t gateway_addr = calculate_prefix_match(rt_walker, max_match); */
   }
-  printf("The Next gateway_addr is %s\n", inet_ntoa(entry->gw));
+  printf("The Next gateway_addr is %s\n", inet_ntoa(next_gw));
   printf("~*~*~*~ Finished with Routing Table LPM Forwarding ~*~*~*~\n\n");
 }
  
