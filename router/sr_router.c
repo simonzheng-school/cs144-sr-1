@@ -175,7 +175,9 @@ int ip_hdr_checksum_valid (sr_ip_hdr_t *ip_hdr) {
 
 void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
 {
-  printf("Performing Routing Table LPM Forwarding...\n\n");
+  printf("~*~*~*~ Starting Routing Table LPM Forwarding with the following rtable: ~*~*~*~\n\n");
+  printf(sr->routing_table);
+  printf("~*~*~*~\n\n");
   struct sr_rt* rt_walker = 0;
 
   if(sr->routing_table == 0)
@@ -184,17 +186,32 @@ void sr_routing_table_lpm_forwarding(struct sr_instance* sr, uint32_t ip_addr)
       return;
   }
 
+  /* Traverse the routing table searching for the gateway address with the greatest match */
   rt_walker = sr->routing_table;
   
   int max_match = 0;
-  uint32_t gateway_addr = calculate_prefix_match(rt_walker, max_match);
+
+  printf("LPM: The first routing entry is: \n\t");
+  sr_print_routing_entry(rt_walker);
+
+  /* variables to hold the current rtable entry */
+  struct in_addr dest = rt_walker.dest;
+  struct in_addr gw = rt_walker.gw;
+  struct in_addr mask = rt_walker.mask;
+
+
+  /* e.g.: uint32_t gateway_addr = calculate_prefix_match(rt_walker, max_match); */
   while(rt_walker->next)
   {
       rt_walker = rt_walker->next; 
-      uint32_t gateway_addr = calculate_prefix_match(rt_walker, max_match);
+      /* do something */
+      printf("LPM: The next routing entry is: \n\t");
+      sr_print_routing_entry(rt_walker);
+      /* e.g.: uint32_t gateway_addr = calculate_prefix_match(rt_walker, max_match); */
   }
-
-} /* -- sr_print_routing_table -- */
-
+  printf("~*~*~*~ Finished with Routing Table LPM Forwarding ~*~*~*~\n\n");
+}
+ 
+/* Check TTL, ARP, etc and the stub functions kurt talked about and add these in your function. */
 /* Check if your minlength calculations are working out, especially around ARP but it should be since it won't add anything else if it's ARP */
 /* Check if you need to see if the datagram has been truncated to < than length specified in IP hdr */
