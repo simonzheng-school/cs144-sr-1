@@ -90,17 +90,14 @@ void sr_handlepacket(struct sr_instance* sr,
 		printf("This is an arp packet!\n\n");
 	if (ethertype(packet) == ethertype_ip) {
 		printf("This is an ip packet!\n\n");
-		while (sr->if_list != NULL) {
-			printf("the if list is...\n");
-			sr_print_if_list(sr);
-			if (sr->if_list->ip == iphdr->ip_dst) {
-				/* it's for me! */
-				printf ("it's for me!\n");
-			} else {
-				printf ("It's not for me!\n");
-			}
-			sr->if_list = sr->if_list->next;
+		if (sr_if_list_contains_ip(sr, iphdr->ip)) {
+			/* it's for me! */
+			printf ("it's for me!\n");
+		} else {
+			printf ("It's not for me!\n");
 		}
+    
+		sr->if_list = sr->if_list->next;
 	}
 
   printf("~*~*~*~\n\n");
