@@ -94,12 +94,11 @@ void sr_handlepacket(struct sr_instance* sr,
 
 		if (sr_if_list_contains_ip(sr, iphdr->ip_dst)) { /* If the packet is for the router */
       printf ("The IP packet is for me!\n");
-      /* If it's ICMP echo req, send echo reply. */
-      sr_icmp_hdr_t *icmp_hdr = (sr_icmp_hdr_t *)(packet + sizeof(sr_ethernet_hdr_t) + sizeof(sr_ip_hdr_t));
-      /* if (icmp_hdr->type == 8 && icmp_hdr->type == 0) */ /* If this is an echo request */
-        /* Send echo reply */
+      sr_icmp_hdr_t *icmp_hdr = (sr_icmp_hdr_t *)(packet + sizeof(sr_ethernet_hdr_t) + sizeof(sr_ip_hdr_t)); 
+      if (icmp_hdr->type == 8 && icmp_hdr->type == 0) { /* If this is an echo request */
+        /* If it's ICMP echo req, send echo reply. */
         /* fill in code here */
-
+      } 
       /* Else if it's TCP/UDP, send ICMP port unreachable */
         /* fill in code here */
 		} else { /* If the packet is not for the router */
